@@ -1,0 +1,17 @@
+### Create Incident
+POST http://localhost:8080/api/incidents
+Content-Type: application/json
+
+{
+  "title": "CrashLoopBackOff",
+  "description": "Payment pod restarting continuously",
+  "namespace": "payments",
+  "podName": "payment-service-76fd8",
+  "nodeName": "worker-01",
+  "severity": "CRITICAL",
+  "status": "OPEN"
+}
+
+###
+
+GET http://localhost:8080/api/incidents
