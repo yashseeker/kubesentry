@@ -50,3 +50,21 @@ Thumbs.db
 # Environment Files
 .env
 application-local.properties
+
+# Build
+target/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env

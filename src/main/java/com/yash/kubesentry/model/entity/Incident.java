@@ -8,25 +8,25 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-@Entity
+@Entity // represents a db
 @Table(name = "incidents")
-@Getter
+@Getter  // reduces boilerplate
 @Setter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 
 public class Incident{
- @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+ @Id // prmiary key
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // db should genereate
+    private Long id; // not long st primitive long can't be ull
     private String title;
     private String description;
     private String namespace;
     private String podName;
     private String nodeName;
 
-   @Enumerated(EnumType.STRING)
+   @Enumerated(EnumType.STRING) //
    private Severity severity;
 
    @Enumerated(EnumType.STRING)

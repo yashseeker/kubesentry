@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @Service
 public class IncidentServiceImpl implements IncidentService {
 
@@ -28,7 +27,7 @@ public class IncidentServiceImpl implements IncidentService {
             LoggerFactory.getLogger(IncidentServiceImpl.class);
     @Override
     public IncidentResponseDTO saveIncident(IncidentRequestDTO requestDTO) {
-        logger.info("Creating new incident with title: {}", requestDTO.getTitle());
+        logger.info("Ruuning 2 , Creating new incident with title: {}", requestDTO.getTitle());
         Incident incident = IncidentMapper.toEntity(requestDTO);
 
         Incident savedIncident = incidentRepository.save(incident);
