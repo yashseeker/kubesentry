@@ -1,5 +1,26 @@
 # KubeSentry
 
+## Overview
+
+## Architecture
+
+## Tech Stack
+
+## Features
+
+## Project Structure
+
+## Running Locally
+
+## Running with Docker Compose
+
+## Running on Kubernetes
+
+## Future Roadmap
+
+
+# KubeSentry
+
 A cloud-native Incident Management platform built with Spring Boot and Kubernetes.
 
 ## Features
