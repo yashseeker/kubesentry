@@ -1,8 +1,10 @@
 package com.yash.kubesentry.dto;
 
+import com.yash.kubesentry.model.enums.IncidentStatus;
 import com.yash.kubesentry.model.enums.Severity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -25,4 +27,6 @@ public class IncidentRequestDTO {
 
     @NotNull(message = "Severity is required")
     private Severity severity;
+
+    private IncidentStatus status;
 }

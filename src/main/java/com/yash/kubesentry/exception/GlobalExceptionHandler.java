@@ -1,5 +1,6 @@
 package com.yash.kubesentry.exception;
 
+import com.yash.kubesentry.payload.ApiResponse;
 import com.yash.kubesentry.payload.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,19 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(InvalidStatusTransitionException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidTransition(
+            InvalidStatusTransitionException ex) {
+
+        ApiResponse<Void> response =
+                ApiResponse.<Void>builder()
+                        .success(false)
+                        .message(ex.getMessage())
+                        .data(null)
+                        .build();
+
+        return ResponseEntity.badRequest().body(response);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(
             MethodArgumentNotValidException ex) {
@@ -37,5 +51,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+
 
 }

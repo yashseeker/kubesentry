@@ -1,13 +1,16 @@
 package com.yash.kubesentry.controller;
-
+import com.yash.kubesentry.dto.PageResponseDTO;
+import com.yash.kubesentry.model.enums.IncidentStatus;
 import com.yash.kubesentry.dto.IncidentRequestDTO;
 import com.yash.kubesentry.dto.IncidentResponseDTO;
+import com.yash.kubesentry.dto.UpdateIncidentStatusRequest;
+import com.yash.kubesentry.model.enums.Severity;
 import com.yash.kubesentry.service.IncidentService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+//import org.springframework.data.domain.Page;
 import com.yash.kubesentry.payload.ApiResponse;
 import java.util.List;
 
@@ -33,13 +36,43 @@ public class IncidentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
     @GetMapping
-    public ResponseEntity<ApiResponse<List<IncidentResponseDTO>>> getAllIncidents() {
+    public ResponseEntity<ApiResponse<PageResponseDTO<IncidentResponseDTO>>>getAllIncidents(
 
-        List<IncidentResponseDTO> incidents =
-                incidentService.getAllIncidents();
+            @RequestParam(defaultValue = "0")
+            int page,
 
-        ApiResponse<List<IncidentResponseDTO>> response =
-                ApiResponse.<List<IncidentResponseDTO>>builder()
+            @RequestParam(defaultValue = "10")
+            int size,
+
+            @RequestParam(defaultValue = "detectedAt")
+            String sortBy,
+
+            @RequestParam(defaultValue = "desc")
+            String sortDir,
+
+            @RequestParam(required = false)
+                    IncidentStatus status,
+
+            @RequestParam(required = false)
+            Severity severity,
+
+            @RequestParam(required = false)
+                    String search
+    ) {
+
+        PageResponseDTO<IncidentResponseDTO> incidents =
+                incidentService.getAllIncidents(
+                        page,
+                        size,
+                        sortBy,
+                        sortDir,
+                        status,
+                        severity,
+                        search
+                );
+
+        ApiResponse<PageResponseDTO<IncidentResponseDTO>> response =
+                ApiResponse.<PageResponseDTO<IncidentResponseDTO>>builder()
                         .success(true)
                         .message("Incidents fetched successfully")
                         .data(incidents)
@@ -77,5 +110,22 @@ public class IncidentController {
                         .build();
 
         return ResponseEntity.ok(response);
+    }
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ApiResponse<IncidentResponseDTO>> updateIncidentStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateIncidentStatusRequest request) {
+
+        IncidentResponseDTO response =
+                incidentService.updateIncidentStatus(id, request.getStatus());
+
+        ApiResponse<IncidentResponseDTO> apiResponse =
+                ApiResponse.<IncidentResponseDTO>builder()
+                        .success(true)
+                        .message("Incident status updated successfully")
+                        .data(response)
+                        .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 }

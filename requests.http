@@ -1,17 +1,34 @@
-### Create Incident
+### Create Incident 1
 POST http://localhost:8080/api/incidents
 Content-Type: application/json
 
 {
-  "title": "CrashLoopBackOff",
-  "description": "Payment pod restarting continuously",
-  "namespace": "payments",
-  "podName": "payment-service-76fd8",
-  "nodeName": "worker-01",
-  "severity": "CRITICAL",
-  "status": "OPEN"
+  "title": "Database Down",
+  "description": "Postgres is not responding",
+  "severity": "HIGH"
 }
 
 ###
 
+POST http://localhost:8080/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Worker Node Not Ready",
+  "description": "Node entered NotReady state",
+  "severity": "CRITICAL"
+}
+
+###
+
+POST http://localhost:8080/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Ingress Failure",
+  "description": "404 from ingress",
+  "severity": "MEDIUM"
+}
+
+### Get all incidents
 GET http://localhost:8080/api/incidents
