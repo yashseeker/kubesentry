@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubesentry-ingress
+  namespace: kubesentry
+spec:
+  ingressClassName: nginx
+
+  rules:
+    - host: kubesentry.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kubesentry-service
+                port:
+                  number: 80

@@ -3,7 +3,7 @@ kind: ConfigMap
 
 metadata:
   name: kubesentry-config
-
+  namespace: kubesentry
 data:
   SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/kubesentry
   SPRING_JPA_HIBERNATE_DDL_AUTO: update

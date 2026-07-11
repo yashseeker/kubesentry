@@ -4,10 +4,14 @@ kind: Deployment
 
 metadata:
   name: kubesentry
-
+  namespace: kubesentry
 spec:
   replicas: 2
-
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
   selector:
     matchLabels:
       app: kubesentry
@@ -18,6 +22,8 @@ spec:
       labels:
         app: kubesentry
     spec:
+      serviceAccountName: kubesentry-sa
+
       containers:
         - name: kubesentry
           image: yashpandeywork/kubesentry:v3
@@ -63,4 +69,13 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 2
             failureThreshold: 3
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
 
