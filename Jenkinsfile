@@ -1,52 +1,52 @@
-// pipeline{
-//     agent any
-//     stages{
-//         stage('Checkout'){
-//             steps{
-//                 checkout scm
-//                 // this makes it reusbale accreos repos , no hard git cmd
-//             }
-//         }
-//         stage('Build'){
-//             steps{
-//                 sh './mvnw clean compile'
-//                 // jenkins runs in a linux sheel that why sh
-//             }
-//         }
-//         stage('Test'){
-//             steps{
-//                 sh './mvnw test'
-//             }
-//         }
-//     }
-//     post{
-//         always{
-//             echo 'Pipeline Finished.'
-//         }
-//         success{
-//             echo 'Build Successful!'
-//         }
-//         failure{
-//             echo 'Build Failed'
-//         }
-//     }
-// }
 pipeline {
 
     agent any
 
+    environment {
+        IMAGE_NAME = "yashpandeywork/kubesentry"
+    }
+
     stages {
 
-        stage('Environment') {
+        stage('Checkout') {
             steps {
-                sh 'pwd'
-                sh 'ls -la'
-                sh 'java -version'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
                 sh 'chmod +x mvnw'
-                sh './mvnw -version'
+                sh './mvnw clean compile'
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                sh './mvnw test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh './mvnw package -DskipTests'
             }
         }
 
     }
 
+    post {
+
+        success {
+            echo "Pipeline completed successfully."
+        }
+
+        failure {
+            echo "Pipeline failed."
+        }
+
+        always {
+            cleanWs()
+        }
+    }
 }
