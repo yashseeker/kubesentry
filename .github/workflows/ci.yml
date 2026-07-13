@@ -56,5 +56,38 @@ jobs:
           name: jacoco-report
           path: target/site/jacoco/
 
+#      - name: Build Docker Image
+#        run: docker build -t kubesentry:latest .
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          # github action exprresion syntax
+
+      - name: Extract Docker Metadata
+        id: meta # just an identifier
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME}}/kubesentry
+          tags: |
+            type=sha
+            type=raw,value=latest
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6 # best practices , support caching, =multi builds
+
+        with:
+          context: . #current
+          push: true # docker push , false would build to locally
+          tags: ${{ steps.meta.outputs.tags}}
+
+
       - name: Build Docker Image
-        run: docker build -t kubesentry:latest .
+        run: |
+          docker build \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/kubesentry:latest \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/kubesentry:${{ github.sha }} \
+            .
+      
