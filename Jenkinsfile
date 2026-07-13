@@ -42,6 +42,7 @@ pipeline {
                 sh 'pwd'
                 sh 'ls -la'
                 sh 'java -version'
+                sh 'chmod +x mvnw'
                 sh './mvnw -version'
             }
         }
