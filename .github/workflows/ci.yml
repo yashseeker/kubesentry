@@ -29,8 +29,11 @@ jobs:
           java-version: 21
           cache: maven
 
+      - name: Make Maven Wrapper Executable
+        run: chmod +x mvnw
+
       - name: Build & Verify
-        run: mvn clean verify
+        run: ./mvnw clean verify
 
       - name: Upload Application JAR
         uses: actions/upload-artifact@v4
@@ -44,3 +47,14 @@ jobs:
         with:
           name: test-reports
           path: target/surefire-reports/
+
+      - name: Upload JaCoCo Report
+        if: always()
+        uses: actions/upload-artifact@v4
+
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+
+      - name: Build Docker Image
+        run: docker build -t kubesentry:latest .
