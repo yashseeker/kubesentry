@@ -42,20 +42,30 @@ pipeline {
             }
         }
         stage('Docker Build') {
+
             steps {
+
                 sh """
-                    docker build \
-                    -t ${IMAGE_NAME}:latest \
-                    .
+                docker build \
+                -t ${IMAGE_NAME}:${IMAGE_TAG} \
+                -t ${IMAGE_NAME}:latest \
+                .
                 """
+
             }
+
         }
         stage('Docker Push') {
+
             steps {
+
                 sh """
-                    docker push ${IMAGE_NAME}:latest
+                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                docker push ${IMAGE_NAME}:latest
                 """
+
             }
+
         }
     }
     post {
