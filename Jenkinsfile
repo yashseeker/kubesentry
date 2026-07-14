@@ -32,7 +32,14 @@ pipeline {
                 sh './mvnw package -DskipTests'
             }
         }
-
+        stage('Docker Build'){
+            steps{
+                script{
+//                 groovy code
+                    docker.build("${IMAGE_NAME}:latest")
+                }
+            }
+        }
     }
 
     post {
