@@ -3,7 +3,7 @@ pipeline {
     environment {
         IMAGE_NAME = "yashpandeywork/kubesentry"
         IMAGE_TAG = "${BUILD_NUMBER}"
-        DOCKER_USER = yashpandeywork
+        DOCKER_USER = "yashpandeywork"
     }
     stages {
         stage('Checkout') {
