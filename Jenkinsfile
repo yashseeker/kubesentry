@@ -1,49 +1,64 @@
 pipeline {
-
     agent any
-
     environment {
         IMAGE_NAME = "yashpandeywork/kubesentry"
+        IMAGE_TAG = "${BUILD_NUMBER}"
     }
-
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
         stage('Build') {
             steps {
                 sh 'chmod +x mvnw'
                 sh './mvnw clean compile'
             }
         }
-
         stage('Unit Tests') {
             steps {
                 sh './mvnw test'
             }
         }
-
         stage('Package') {
             steps {
                 sh './mvnw package -DskipTests'
             }
         }
-        stage('Docker Build'){
-            steps{
-                script{
-//                 groovy code
-                    docker.build("${IMAGE_NAME}:latest")
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub',
+                    usernameVariable: 'yashpandeywork',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login \
+                        -u "$DOCKER_USER" \
+                        --password-stdin
+                    '''
                 }
             }
         }
+        stage('Docker Build') {
+            steps {
+                sh """
+                    docker build \
+                    -t ${IMAGE_NAME}:latest \
+                    .
+                """
+            }
+        }
+        stage('Docker Push') {
+            steps {
+                sh """
+                    docker push ${IMAGE_NAME}:latest
+                """
+            }
+        }
     }
-
     post {
-
         success {
             echo "Pipeline completed successfully."
         }
