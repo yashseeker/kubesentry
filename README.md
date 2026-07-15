@@ -6,7 +6,7 @@
 
 ## Tech Stack
 
-## Features
+## Features.
 
 ## Project Structure
 
