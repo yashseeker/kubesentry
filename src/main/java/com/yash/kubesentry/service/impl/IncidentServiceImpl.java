@@ -19,13 +19,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import com.yash.kubesentry.specification.IncidentSpecification;
+import com.yash.kubesentry.service.MetricsService;
 @Service
 public class IncidentServiceImpl implements IncidentService {
 
     private final IncidentRepository incidentRepository;
 
-    public IncidentServiceImpl(IncidentRepository incidentRepository) {
+    private final MetricsService metricsService;
+
+    public IncidentServiceImpl(IncidentRepository incidentRepository, MetricsService metricsService) {
         this.incidentRepository = incidentRepository;
+        this.metricsService = metricsService;
     }
     private static final Logger logger =
             LoggerFactory.getLogger(IncidentServiceImpl.class);
@@ -37,7 +41,7 @@ public class IncidentServiceImpl implements IncidentService {
         Incident savedIncident = incidentRepository.save(incident);
 
         logger.info("Incident created successfully with id: {}", savedIncident.getId());
-
+        metricsService.incrementIncidentCreated();
         return IncidentMapper.toResponseDTO(savedIncident);
     }
 
@@ -105,6 +109,7 @@ public class IncidentServiceImpl implements IncidentService {
             throw new IncidentNotFoundException(id);
         }
         incidentRepository.deleteById(id);
+        metricsService.incrementIncidentDeleted();
     }
 
     @Override

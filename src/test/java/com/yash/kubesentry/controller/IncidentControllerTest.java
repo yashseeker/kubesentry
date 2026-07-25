@@ -10,39 +10,43 @@ import com.yash.kubesentry.exception.InvalidStatusTransitionException;
 import com.yash.kubesentry.model.enums.IncidentStatus;
 import com.yash.kubesentry.model.enums.Severity;
 import com.yash.kubesentry.service.IncidentService;
-
+import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.Test;
-
 import static org.mockito.ArgumentMatchers.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
 import org.springframework.http.MediaType;
-
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
-
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import com.yash.kubesentry.security.jwt.JwtFilter;
+import com.yash.kubesentry.security.jwt.JwtService;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @WebMvcTest(IncidentController.class)
-class IncidentControllerTest {
+@AutoConfigureMockMvc(addFilters = false)
+// this we added because controller vs integration, controller just has to test for controller calling services apt, not tth whole
 
+class IncidentControllerTest {
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @MockBean
     private IncidentService incidentService;
+    @MockBean
+    private JwtFilter jwtFilter;
 
+    @MockBean
+    private JwtService jwtService;
+    @MockBean
+    private UserDetailsService userDetailsService;
     @Test
     void shouldCreateIncidentSuccessfully() throws Exception {
 
@@ -87,7 +91,6 @@ class IncidentControllerTest {
                 .andExpect(jsonPath("$.data.title")
                         .value("Database Down"));
     }
-
     @Test
     void shouldGetIncidentByIdSuccessfully() throws Exception {
 
@@ -126,7 +129,6 @@ class IncidentControllerTest {
                 .andExpect(jsonPath("$.data.status")
                         .value("OPEN"));
     }
-
     @Test
     void shouldGetAllIncidents() throws Exception{
         IncidentResponseDTO incident =
@@ -185,7 +187,6 @@ class IncidentControllerTest {
                 .andExpect(jsonPath("$.data.page")
                         .value(0));
     }
-
     @Test
     void shouldUpdateIncidentStatusSuccessfully() throws Exception {
 
@@ -233,7 +234,6 @@ class IncidentControllerTest {
                 .andExpect(jsonPath("$.data.status")
                         .value("IN_PROGRESS"));
     }
-
     @Test
     void shouldDeleteIncidentSuccessfully() throws Exception {
 
@@ -252,7 +252,6 @@ class IncidentControllerTest {
                 .andExpect(jsonPath("$.message")
                         .value("Incident deleted successfully"));
     }
-
     @Test
     void shouldReturnBadRequestWhenRequestIsInvalid() throws Exception {
 
@@ -290,7 +289,6 @@ class IncidentControllerTest {
 
         verifyNoInteractions(incidentService);
     }
-
     @Test
     void shouldReturnNotFoundWhenIncidentDoesNotExist() throws Exception {
 
@@ -314,7 +312,6 @@ class IncidentControllerTest {
                 .andExpect(jsonPath("$.message")
                         .value("Incident with id 999 not found."));
     }
-
     @Test
     void shouldReturnNotFoundWhenDeletingUnknownIncident() throws Exception {
 
@@ -340,7 +337,6 @@ class IncidentControllerTest {
                 .andExpect(jsonPath("$.message")
                         .value("Incident with id 999 not found."));
     }
-
     @Test
     void shouldReturnBadRequestForInvalidStatusTransition() throws Exception {
 
@@ -379,7 +375,6 @@ class IncidentControllerTest {
                 .andExpect(jsonPath("$.message")
                         .value("Invalid status transition from CLOSED to OPEN"));
     }
-
     @Test
     void shouldReturnBadRequestWhenRequestBodyIsMissing() throws Exception {
 
@@ -394,7 +389,6 @@ class IncidentControllerTest {
 
         verifyNoInteractions(incidentService);
     }
-
     @Test
     void shouldReturnBadRequestForInvalidSeverityEnum() throws Exception {
 
@@ -421,4 +415,6 @@ class IncidentControllerTest {
 
         verifyNoInteractions(incidentService);
     }
+
+
 }

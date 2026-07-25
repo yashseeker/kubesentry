@@ -7,6 +7,8 @@ import com.yash.kubesentry.model.enums.IncidentStatus;
 import com.yash.kubesentry.model.enums.Severity;
 import com.yash.kubesentry.repository.IncidentRepository;
 import java.util.Optional; // for get incident
+
+import com.yash.kubesentry.service.MetricsService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -29,6 +31,9 @@ class IncidentServiceImplTest {
 
     @Mock
     private IncidentRepository incidentRepository;
+
+    @Mock
+    private MetricsService metricsService;
 
     @InjectMocks
     private IncidentServiceImpl incidentService;

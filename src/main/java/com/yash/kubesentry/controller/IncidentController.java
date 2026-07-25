@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 //import org.springframework.data.domain.Page;
 import com.yash.kubesentry.payload.ApiResponse;
 import java.util.List;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 @RestController
 @RequestMapping("/api/incidents")
 public class IncidentController {
@@ -22,6 +22,7 @@ public class IncidentController {
         this.incidentService = incidentService;
     }
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<IncidentResponseDTO>> createIncident(
             @Valid @RequestBody IncidentRequestDTO requestDTO) {
         IncidentResponseDTO response = incidentService.saveIncident(requestDTO);
@@ -81,6 +82,7 @@ public class IncidentController {
         return ResponseEntity.ok(response);
     }
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<IncidentResponseDTO>> getIncidentById(
             @PathVariable Long id) {
 
@@ -97,6 +99,7 @@ public class IncidentController {
         return ResponseEntity.ok(response);
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteIncident(
             @PathVariable Long id) {
 
@@ -112,6 +115,7 @@ public class IncidentController {
         return ResponseEntity.ok(response);
     }
     @PatchMapping("/{id}/status")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<IncidentResponseDTO>> updateIncidentStatus(
             @PathVariable Long id,
             @Valid @RequestBody UpdateIncidentStatusRequest request) {

@@ -1,4 +1,4 @@
-package com.yash.kubesentry.conifg;
+package com.yash.kubesentry.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
