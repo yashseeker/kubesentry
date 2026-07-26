@@ -20,11 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @RequestMapping("/api/incidents")
 public class IncidentController {
 
-    @GetMapping("/")
-    public String home() {
-        return "KubeSentry API is running 🚀";
-    }
-    
+
+
     private final IncidentService incidentService;
     public IncidentController(IncidentService incidentService) {
         this.incidentService = incidentService;
