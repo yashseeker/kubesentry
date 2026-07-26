@@ -14,8 +14,7 @@ resource "aws_iam_role" "github_actions" {
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-# role -> trust & permission
-#
+    # role -> trust & permission
     Statement = [
       {
         Effect = "Allow"

@@ -26,6 +26,9 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Login to Amazon ECR
         id: login-ecr
+      - name: Verify Docker Login
+        run: |
+          docker info
         uses: aws-actions/amazon-ecr-login@v2
       - name: Build Docker Image
         run: |
