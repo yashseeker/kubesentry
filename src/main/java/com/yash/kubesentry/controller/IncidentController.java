@@ -14,9 +14,17 @@ import org.springframework.http.ResponseEntity;
 import com.yash.kubesentry.payload.ApiResponse;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+
 @RestController
 @RequestMapping("/api/incidents")
 public class IncidentController {
+
+    @GetMapping("/")
+    public String home() {
+        return "KubeSentry API is running 🚀";
+    }
+    
     private final IncidentService incidentService;
     public IncidentController(IncidentService incidentService) {
         this.incidentService = incidentService;
